@@ -225,14 +225,14 @@ main(int argc, char** argv)
     vec_cmplx zeros(cdouble(0,0), Nintervals);
 
     valarray<double> x2((double)0, x.size());
-    vec_cmplx cx2(cdouble(0,0), Nintervals);
+    vec_cmplx cx2(cdouble(0,0), Npoints);
     FOR(i, x){
         x2[i] = SQ(x[i]);
         cx2[i] = x2[i];
     }
 
     // Initialisation de la fonction d'onde :
-    vec_cmplx psi(Npoints);
+    vec_cmplx psi(cdouble(0,0),Npoints);
 
     // initialization time and position to check Probability
     double t = 0;
