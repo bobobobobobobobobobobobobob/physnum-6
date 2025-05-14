@@ -1,0 +1,5 @@
+mac:
+clang++ --std=c++17 -fopenmp Exercice6_2025_student.cpp -o physnum6
+
+VM:
+

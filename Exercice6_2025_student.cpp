@@ -63,7 +63,6 @@ cdouble compute_mean(const vec_cmplx& psi, const vec_cmplx& aOp, const vec_cmplx
         tmp[i+1] += cOp[i]*psi[i];
     }
     cdouble out = 0;
-    #pragma omp parallel for num_threads(NTHREADS)
     FOR(i, tmp){
         out += conj(psi[i])*tmp[i];
     }
@@ -100,7 +99,6 @@ double V(double x, double V0, double om0, double xa, double xb, double xL, doubl
 double prob(const vec_cmplx& psi, double dx, size_t start_idx, size_t end_idx)
 {
     cdouble out=0;
-    #pragma omp parallel for num_threads(NTHREADS)
     for(size_t i=start_idx; i<end_idx; ++i){
         out += 0.5*(NORM2(psi[i])+NORM2(psi[i+1]))*dx;
     }
@@ -331,16 +329,6 @@ main(int argc, char** argv)
     fichier_x.close();
     delete[] V_out; delete[] x_out;
 
-    /*
-    ofstream fichier_psi((output + "_psi2.out").c_str());
-    fichier_psi.precision(6);
-
-    ofstream fichier_observables((output + "_obs.out").c_str());
-    fichier_observables.precision(15);
-    */
-
-        // Ecriture des observables :
-    
     // TODO: introduire les arguments des fonctions prob, E, xmoy, x2moy, pmoy et p2moy
     //       en accord avec la façon dont vous les aurez programmés plus haut
 
