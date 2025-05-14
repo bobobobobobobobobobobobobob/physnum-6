@@ -17,3 +17,5 @@ output = output
 
 % Printing: set to 0 to reduce printouts
 verbose = 1
+
+%test
