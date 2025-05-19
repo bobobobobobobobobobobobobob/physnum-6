@@ -11,26 +11,25 @@ output_base = "output"    # un autre truc qu'il faut apparament
 
 # Définir les paramètres
 
-
+fs=12
+ls=12
 
 tfin = 0.08
 xL = -1
 xR = 1
 V0 = 0
-xa = -0.5
-xb = 0.5
+xa = 0
+xb = 0
 om0 = 100
-
 x0 = -0.5
-n = 16
 sigma_norm = 0.04
-
+n = 16
 #Numérique
 Nsteps = 800
 Nintervals = 512
 
 # Construire la commande
-cmd = f"{repertoire}{executable} {input_filename} tfin={tfin} xL={xL}  output={output_base}"
+cmd = f"{repertoire}{executable} {input_filename} tfin={tfin} xL={xL} xR={xR} V0={V0} xa={xa} xb={xb} om0={om0} x0={x0} n={n} sigma_norm={sigma_norm} Nsteps={Nsteps} Nintervals={Nintervals} output={output_base}"
 
 subprocess.run(cmd, shell=True)
 
@@ -59,7 +58,9 @@ nt, nx = abs_values.shape
 
 # === Animation ===
 fig, ax = plt.subplots()
-line_psi, = ax.plot(x, abs_values[0], label="|ψ(x,t)|")
+line_abs, = ax.plot(x, abs_values[0], color='black', label="|ψ(x,t)|")
+line_re,  = ax.plot(x, real_values[0], color='blue', label="Re(ψ(x,t))")
+line_im,  = ax.plot(x, im_values[0], color='red', label="Im(ψ(x,t))")
 #line_pot, = ax.plot(x, V / np.max(V) * np.max(psi_values), '--', label="Potentiel V(x)")
 
 ax.set_xlabel("x", fontsize=14)
@@ -69,11 +70,43 @@ ax.legend()
 ax.grid(True)
 
 def update(frame):
-    line_psi.set_ydata(abs_values[frame])
+    line_abs.set_ydata(abs_values[frame])
+    line_re.set_ydata(real_values[frame])
+    line_im.set_ydata(im_values[frame])
     ax.set_title(f"|ψ(x,t)| — frame {frame+1}/{nt}")
-    return line_psi
+    return line_abs,line_re,line_im
 
 ani = animation.FuncAnimation(fig, update, frames=nt, interval=12)
 plt.tight_layout()
+
+
+x_exp=obs[:,0]
+times = np.linspace(0, tfin, nt)
+# solution théorique
+x_class=x0 * np.cos(om0 * times)
+
+# tracé des graphiques
+
+# tracé de <x> 
+plt.figure()
+plt.scatter(times,x_exp,label="<x>_quantique (t)")
+plt.scatter(times,x_class,label="<x>_classique (t)")
+plt.xlabel("temps [s]")
+plt.ylabel("<x>")
+plt.grid(True)
+plt.legend(fontsize=ls)
+plt.xlabel("x")
+
+#tracé de V
+
+plt.figure()
+plt.plot(x, V, label="Potentiel V(x)", color='black')
+plt.xlabel("x")
+plt.ylabel("V(x)")
+plt.grid(True)
+plt.legend(fontsize=ls)
+
+
+
 plt.show()
 
