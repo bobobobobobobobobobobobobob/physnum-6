@@ -1,6 +1,40 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import subprocess
+
+
+repertoire = "./"                     # dossier contenant l'exécutable
+executable = "physnum6"            # nom de l'exécutable
+input_filename = "configuration.in"  # fichier d'entrée
+output_base = "output"    # un autre truc qu'il faut apparament
+
+# Définir les paramètres
+
+
+
+tfin = 0.08
+xL = -1
+xR = 1
+V0 = 0
+xa = -0.5
+xb = 0.5
+om0 = 100
+
+x0 = -0.5
+n = 16
+sigma_norm = 0.04
+
+#Numérique
+Nsteps = 800
+Nintervals = 512
+
+# Construire la commande
+cmd = f"{repertoire}{executable} {input_filename} tfin={tfin} xL={xL}  output={output_base}"
+
+subprocess.run(cmd, shell=True)
+
+
 
 # === Fichiers ===
 prefix = "output"
@@ -41,6 +75,5 @@ def update(frame):
 
 ani = animation.FuncAnimation(fig, update, frames=nt, interval=12)
 plt.tight_layout()
-#ani.save("woo.mp4")
 plt.show()
 
