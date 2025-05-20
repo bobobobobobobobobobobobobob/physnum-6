@@ -141,7 +141,7 @@ vec_cmplx normalize(vec_cmplx const& psi, double const& dx)
     for(size_t i=0; i<psi.size()-1; ++i){
         integral += dx*0.5*(NORM2(psi[i])+NORM2(psi[i+1]));
     }
-    return psi/integral.real();
+    return psi/sqrt(integral.real());
 }
 
 void writePsi(ofstream& ofs, const cdouble& psi){

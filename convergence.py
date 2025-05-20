@@ -21,13 +21,13 @@ n = 16
 
 # === CHOIX : paramètre à faire varier ===
 param_name = "Nsteps"  # ou "Nintervals"
-param_values = np.linspace(10,10000,20)
+param_values = np.linspace(300,1000,20).astype(int)
 
 # Paramètres fixes associés
 fixed_Nsteps = 800
 fixed_Nintervals = 512
 
-xmean_final = []
+x_final = []
 dt_list = []
 
 for val in param_values:
@@ -38,22 +38,20 @@ for val in param_values:
     subprocess.run(cmd, shell=True)
 
     obs = np.fromfile(f"{output_base}_obs.out", dtype=np.float64).reshape(-1, 8)
-    xmean_final.append(obs[-1, 4])
+    x_final.append(obs[-1, 4])
 
     if param_name == "Nsteps":
-        dt_list.append(tfin / Nsteps)
+        dt_list.append(tfin / Nsteps)   #  dt pas de temps
     else:
-        dx = (xR - xL) / Nintervals
+        dx = (xR - xL) / Nintervals     # element de maillage h(x)
         dt_list.append(dx)
 
 # === Tracé
 plt.figure()
-plt.plot(dt_list, xmean_final, 'o-')
+plt.plot(np.array(dt_list)**2, x_final, '+-')
 plt.xlabel("∆t" if param_name == "Nsteps" else "h (dx)")
 plt.ylabel("⟨x⟩(tfin)")
-plt.title(f"Convergence en {param_name}")
 plt.grid(True)
-plt.tight_layout()
 plt.show()
 
 
