@@ -79,13 +79,27 @@ def update(frame):
 ani = animation.FuncAnimation(fig, update, frames=nt, interval=12)
 plt.tight_layout()
 
+#quantitées physiques :
 
 x_exp=obs[:,4]
 p_exp=obs[:,6]
 times=obs[:,0]
-# solution théorique
+Energie=obs[:,3]
+prob_total = obs[:,1] + obs[:,2]
+#probleme
+delta_x = np.sqrt(np.abs(obs[:,5] - obs[:,4]**2))
+delta_p = np.sqrt(np.abs(obs[:,7] - obs[:,6]**2))
+#probleme
+incertitude = delta_x * delta_p
+
+
+# solution théorique :
+
+
 x_class=x0 * np.cos(om0 * times)
 p_class=-x0*om0*np.sin(om0 * times)
+
+
 
 # tracé des graphiques
 
@@ -135,7 +149,9 @@ plt.ylabel("V(x)")
 plt.grid(True)
 plt.legend(fontsize=ls)
 
-prob_total = obs[:,1] + obs[:,2]
+
+#conservation de la probabilité
+
 
 plt.figure()
 plt.plot(times, prob_total, label="Probabilité totale")
@@ -145,6 +161,28 @@ plt.ylabel("∫|ψ|² dx")
 plt.grid(True)
 plt.legend(fontsize=ls)
 
+#conservation de l'energie
+
+plt.figure()
+plt.plot(times, obs[:,3], label="Energie dans le temps")
+#plt.axhline(Energie[0], color='gray', linestyle='--', label="Energie initiale")
+plt.xlabel("temps [s]")
+plt.ylabel("Energie [j]")
+plt.grid(True)
+plt.legend(fontsize=ls)
+
+# tracé du principe de Heisenberg
+
+
+hbar = 1.0
+plt.figure()
+plt.plot(times, incertitude, label="Δx · Δp")
+plt.axhline(hbar/2, color='gray', linestyle='--', label="ℏ/2 = 0.5")
+plt.xlabel("Temps [s]")
+plt.ylabel("Δx · Δp")
+plt.title("Principe d’incertitude de Heisenberg")
+plt.legend(fontsize=fs)
+plt.grid(True)
 
 
 
