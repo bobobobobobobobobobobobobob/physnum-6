@@ -80,12 +80,31 @@ ani = animation.FuncAnimation(fig, update, frames=nt, interval=12)
 plt.tight_layout()
 
 
-x_exp=obs[:,0]
-times = np.linspace(0, tfin, nt)
+x_exp=obs[:,4]
+p_exp=obs[:,6]
+times=obs[:,0]
 # solution théorique
 x_class=x0 * np.cos(om0 * times)
+p_class=-x0*om0*np.sin(om0 * times)
 
 # tracé des graphiques
+
+#tracé des trajectoires
+
+plt.figure()
+X, T = np.meshgrid(x, times) 
+plt.pcolormesh(X, T, abs_values, shading='auto', cmap='viridis')  
+plt.colorbar(label="|ψ(x,t)|")
+plt.xlabel("Position x")
+plt.ylabel("Temps t")
+
+plt.figure()
+plt.pcolormesh(X, T, real_values, shading='auto', cmap='viridis')  
+plt.colorbar(label="Re(ψ(x,t))")
+plt.xlabel("Position x")
+plt.ylabel("Temps t")
+
+
 
 # tracé de <x> 
 plt.figure()
@@ -95,7 +114,17 @@ plt.xlabel("temps [s]")
 plt.ylabel("<x>")
 plt.grid(True)
 plt.legend(fontsize=ls)
-plt.xlabel("x")
+
+
+
+# tracé de <p> 
+plt.figure()
+plt.scatter(times,p_exp,label="<p>_quantique (t)")
+plt.scatter(times,p_class,label="<p>_classique (t)")
+plt.xlabel("temps [s]")
+plt.ylabel("<x>")
+plt.grid(True)
+plt.legend(fontsize=ls)
 
 #tracé de V
 
@@ -105,6 +134,17 @@ plt.xlabel("x")
 plt.ylabel("V(x)")
 plt.grid(True)
 plt.legend(fontsize=ls)
+
+prob_total = obs[:,1] + obs[:,2]
+
+plt.figure()
+plt.plot(times, prob_total, label="Probabilité totale")
+plt.axhline(1, color='gray', linestyle='--', label="probabilité =1")
+plt.xlabel("temps [s]")
+plt.ylabel("∫|ψ|² dx")
+plt.grid(True)
+plt.legend(fontsize=ls)
+
 
 
 
