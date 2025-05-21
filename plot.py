@@ -14,6 +14,7 @@ output_base = "output"    # un autre truc qu'il faut apparament
 fs=12
 ls=12
 
+m=1
 tfin = 0.08
 xL = -1
 xR = 1
@@ -61,6 +62,10 @@ fig, ax = plt.subplots()
 line_abs, = ax.plot(x, abs_values[0], color='black', label="|ψ(x,t)|")
 line_re,  = ax.plot(x, real_values[0], color='blue', label="Re(ψ(x,t))")
 line_im,  = ax.plot(x, im_values[0], color='red', label="Im(ψ(x,t))")
+def cc(en):
+    return en * np.max(abs_values) *2 / np.max(V)
+ax.plot(x, cc(V), "k--", label="V(x)")
+ax.plot(x, np.ones_like(x)*cc(np.max(obs[:,3])), 'y--')
 #line_pot, = ax.plot(x, V / np.max(V) * np.max(psi_values), '--', label="Potentiel V(x)")
 
 ax.set_xlabel("x", fontsize=14)
@@ -95,9 +100,10 @@ incertitude = delta_x * delta_p
 
 # solution théorique :
 
-
-x_class=x0 * np.cos(om0 * times)
-p_class=-x0*om0*np.sin(om0 * times)
+om0_pr = om0/np.abs(xL)
+p0 = p_exp[0]
+x_class=x0 * np.cos(om0_pr * times) + p0/(om0*m) * np.sin(om0_pr*times)
+p_class=-m*x0*om0_pr*np.sin(om0_pr * times) + p0*np.cos(om0_pr*times)
 
 
 
@@ -122,10 +128,10 @@ plt.ylabel("Temps t")
 
 # tracé de <x> 
 plt.figure()
-plt.scatter(times,x_exp,label="<x>_quantique (t)")
-plt.scatter(times,x_class,label="<x>_classique (t)")
+plt.scatter(times,x_exp,label="<x>_quantique (t)", s=3)
+plt.scatter(times,x_class,label="<x>_classique (t)", s=3)
 plt.xlabel("temps [s]")
-plt.ylabel("<x>")
+plt.ylabel(r"$\left<x\right>$")
 plt.grid(True)
 plt.legend(fontsize=ls)
 
@@ -133,10 +139,10 @@ plt.legend(fontsize=ls)
 
 # tracé de <p> 
 plt.figure()
-plt.scatter(times,p_exp,label="<p>_quantique (t)")
-plt.scatter(times,p_class,label="<p>_classique (t)")
+plt.scatter(times,p_exp,label=r"$\left<p\right>_{quantique} (t)$",s=3)
+plt.scatter(times,p_class,label=r"$\left<p\right>_{classique} (t)$",s=3)
 plt.xlabel("temps [s]")
-plt.ylabel("<x>")
+plt.ylabel(r"$\left<p\right>$")
 plt.grid(True)
 plt.legend(fontsize=ls)
 
@@ -177,6 +183,8 @@ plt.legend(fontsize=ls)
 hbar = 1.0
 plt.figure()
 plt.plot(times, incertitude, label="Δx · Δp")
+plt.plot(times, delta_x , label="Δx")
+plt.plot(times, delta_p, label="Δp")
 plt.axhline(hbar/2, color='gray', linestyle='--', label="ℏ/2 = 0.5")
 plt.xlabel("Temps [s]")
 plt.ylabel("Δx · Δp")

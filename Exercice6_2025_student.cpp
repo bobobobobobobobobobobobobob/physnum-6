@@ -84,6 +84,7 @@ double V(double x, double V0, double om0, double xa, double xb, double xL, doubl
         out = 0.5*m*SQ(om0)*SQ((x-xb)/(xR-xb));
     }
     return out;
+    // return 0;
 }
 
 // Declaration des diagnostiques de la particule d'apres sa fonction d'onde psi :
@@ -263,7 +264,7 @@ main(int argc, char** argv)
     aP[0]=2; cP[last]=-2;
     dP *= pcoef; aP *= pcoef; cP *= pcoef;
 
-    const double p2coef = -SQ(hbar);
+    const double p2coef = -SQ(hbar) / SQ(dx);
     vec_cmplx dP2(cdouble(-2,0), Npoints), aP2(cdouble(1,0), Nintervals), cP2(cdouble(1,0), Nintervals);
     dP2[0] = 0; dP2[last_diag] = 0;
     aP2[0] = 0; cP2[last] = 0;
@@ -359,10 +360,10 @@ main(int argc, char** argv)
         writeObs(fichier_observables, t, prob1, prob2, energy, avg_x, avg_x2, avg_p, avg_p2);
         // Multiplication psi_tmp = B * psi :
         vec_cmplx psi_tmp(cdouble(0,0), Npoints);
-        #pragma omp parallel for num_threads(NTHREADS)
+        //#pragma omp parallel for num_threads(NTHREADS)
         for (size_t i=0; i < Npoints; ++i)
             psi_tmp[i] = dB[i] * psi[i];
-        #pragma omp parallel for num_threads(NTHREADS)
+        //#pragma omp parallel for num_threads(NTHREADS)
         for (size_t i=0; i < Nintervals; ++i) {
             psi_tmp[i] += cB[i] * psi[i + 1];
             psi_tmp[i + 1] += aB[i] * psi[i];
