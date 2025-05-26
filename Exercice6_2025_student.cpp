@@ -17,7 +17,7 @@ typedef valarray<cdouble> vec_cmplx;
 constexpr double PI = 3.1415926535897932384626433832795028841971e0;
 #define NTHREADS 3
 
-#define IN(x, a, b) (a <= (x) && (x) <= b)
+#define IN(x, a, b) ((a) <= (x) && (x) <= (b))
 #define SQ(x) ((x)*(x))
 #define NORM2(z) (conj(z)*(z))
 #define FOR(i, arr) for(size_t i=0;i<arr.size();++i)
